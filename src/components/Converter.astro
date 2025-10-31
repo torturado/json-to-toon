@@ -48,9 +48,20 @@
     <!-- TOON Output -->
     <div class="flex flex-col">
       <div class="flex items-center justify-between mb-2">
-        <label for="toon-output" class="text-sm font-semibold text-gray-700">
-          TOON
-        </label>
+        <div class="flex items-center gap-3">
+          <label for="toon-output" class="text-sm font-semibold text-gray-700">
+            TOON
+          </label>
+          <div id="token-comparison-mini" class="hidden text-xs">
+            <div class="flex items-center gap-2 px-2 py-1 bg-gray-50 rounded border border-gray-200">
+              <span class="text-gray-500">Tokens:</span>
+              <span id="json-tokens-mini" class="text-blue-600 font-semibold">0</span>
+              <span class="text-gray-400">→</span>
+              <span id="toon-tokens-mini" class="text-green-600 font-semibold">0</span>
+              <span class="text-emerald-600 font-semibold ml-1" id="savings-mini">(-0%)</span>
+            </div>
+          </div>
+        </div>
         <div class="flex gap-2">
           <button
             id="toon-to-json-btn"
@@ -123,6 +134,7 @@
 
 <script>
   import { jsonToToon, toonToJson } from '../lib/converter';
+  import { compareTokens } from '../lib/tokenizer';
 
   const jsonInput = document.getElementById('json-input') as HTMLTextAreaElement;
   const toonOutput = document.getElementById('toon-output') as HTMLTextAreaElement;
@@ -131,6 +143,10 @@
   const delimiterSelect = document.getElementById('delimiter-select') as HTMLSelectElement;
   const indentInput = document.getElementById('indent-input') as HTMLInputElement;
   const lengthMarkerCheckbox = document.getElementById('length-marker-checkbox') as HTMLInputElement;
+  const tokenComparisonMini = document.getElementById('token-comparison-mini');
+  const jsonTokensMini = document.getElementById('json-tokens-mini');
+  const toonTokensMini = document.getElementById('toon-tokens-mini');
+  const savingsMini = document.getElementById('savings-mini');
 
   function hideError(element: HTMLElement) {
     element.classList.add('hidden');
@@ -165,9 +181,13 @@
       });
 
       toonOutput.value = toonText;
+      
+      // Update token comparison
+      updateTokenComparison(jsonText, toonText);
     } catch (error) {
       showError(jsonError!, `Error converting: ${error instanceof Error ? error.message : 'Invalid JSON'}`);
       toonOutput.value = '';
+      hideTokenComparison();
     }
   }
 
@@ -188,9 +208,14 @@
         strict: true,
       });
 
-      jsonInput.value = JSON.stringify(jsonData, null, 2);
+      const formattedJson = JSON.stringify(jsonData, null, 2);
+      jsonInput.value = formattedJson;
+      
+      // Update token comparison
+      updateTokenComparison(formattedJson, toonText);
     } catch (error) {
       showError(toonError!, `Error converting: ${error instanceof Error ? error.message : 'Invalid TOON'}`);
+      hideTokenComparison();
     }
   }
 
@@ -208,6 +233,47 @@
       jsonInput.value = JSON.stringify(jsonData, null, 2);
     } catch (error) {
       showError(jsonError!, `Error formatting: ${error instanceof Error ? error.message : 'Invalid JSON'}`);
+    }
+  }
+
+  function updateTokenComparison(jsonText: string, toonText: string) {
+    if (!jsonText || !toonText) {
+      hideTokenComparison();
+      return;
+    }
+
+    try {
+      const comparison = compareTokens(jsonText, toonText);
+      
+      if (tokenComparisonMini && jsonTokensMini && toonTokensMini && savingsMini) {
+        tokenComparisonMini.classList.remove('hidden');
+        
+        jsonTokensMini.textContent = comparison.json.toLocaleString();
+        toonTokensMini.textContent = comparison.toon.toLocaleString();
+        
+        const savingsText = comparison.savingsPercent > 0 
+          ? `(-${comparison.savingsPercent.toFixed(1)}%)`
+          : `(+${Math.abs(comparison.savingsPercent).toFixed(1)}%)`;
+        savingsMini.textContent = savingsText;
+        
+        // Update color based on savings
+        if (comparison.savingsPercent > 0) {
+          savingsMini.classList.remove('text-red-600');
+          savingsMini.classList.add('text-emerald-600');
+        } else {
+          savingsMini.classList.remove('text-emerald-600');
+          savingsMini.classList.add('text-red-600');
+        }
+      }
+    } catch (error) {
+      console.error('Error updating token comparison:', error);
+      hideTokenComparison();
+    }
+  }
+
+  function hideTokenComparison() {
+    if (tokenComparisonMini) {
+      tokenComparisonMini.classList.add('hidden');
     }
   }
 
