@@ -1,9 +1,9 @@
-import { Tiktoken } from 'js-tiktoken/lite';
-import o200k_base from 'js-tiktoken/ranks/cl100k_base';
+import { Tiktoken } from 'js-tiktoken';
+import o200k_base from 'js-tiktoken/ranks/o200k_base';
 
 let encoder: Tiktoken | null = null;
 
-function getEncoder(): Tiktoken {
+function getEncoder() {
   if (!encoder) {
     encoder = new Tiktoken(o200k_base);
   }
@@ -41,4 +41,3 @@ export function compareTokens(jsonText: string, toonText: string): TokenComparis
     savingsPercent: Math.round(savingsPercent * 10) / 10, // Round to 1 decimal
   };
 }
-

@@ -7,7 +7,7 @@ const { title = 'JSON ↔ TOON Converter' } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" class="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="description" content="Convert between JSON and TOON (Token-Oriented Object Notation) - an efficient format for LLMs. 100% client-side, your data never leaves your browser." />
@@ -15,6 +15,18 @@ const { title = 'JSON ↔ TOON Converter' } = Astro.props;
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
+    <script>
+      // Initialize dark mode as default
+      (function() {
+        const saved = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (saved === 'light') {
+          document.documentElement.classList.remove('dark');
+        } else if (saved === 'dark' || !saved) {
+          document.documentElement.classList.add('dark');
+        }
+      })();
+    </script>
   </head>
   <body>
     <slot />
@@ -28,8 +40,16 @@ const { title = 'JSON ↔ TOON Converter' } = Astro.props;
   
   body {
     margin: 0;
-    background: linear-gradient(to bottom, #f8fafc, #e2e8f0);
     min-height: 100vh;
+    transition: background-color 0.2s ease;
+  }
+  
+  html:not(.dark) body {
+    background: linear-gradient(to bottom, #f8fafc, #e2e8f0);
+  }
+  
+  html.dark body {
+    background: linear-gradient(to bottom, #0f172a, #1e293b);
   }
 </style>
 
