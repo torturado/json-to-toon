@@ -1,0 +1,31 @@
+{
+  "name": "json-to-toon",
+  "version": "1.0.0",
+  "description": "Web converter between JSON and TOON (Token-Oriented Object Notation) - an efficient format for LLMs",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "keywords": [
+    "json",
+    "toon",
+    "converter",
+    "llm",
+    "token-efficient",
+    "astro",
+    "tailwindcss"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@astrojs/tailwind": "^6.0.2",
+    "astro": "^5.15.3",
+    "tailwindcss": "^3.4.18"
+  },
+  "dependencies": {
+    "@byjohann/toon": "^0.5.1"
+  }
+}

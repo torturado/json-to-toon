@@ -1,0 +1,274 @@
+---
+// Component imports
+---
+
+<div class="converter-wrapper" id="converter">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <!-- JSON Input -->
+    <div class="flex flex-col">
+      <div class="flex items-center justify-between mb-2">
+        <label for="json-input" class="text-sm font-semibold text-gray-700">
+          JSON
+        </label>
+        <div class="flex gap-2">
+          <button
+            id="json-to-toon-btn"
+            class="px-3 py-1.5 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700 transition-colors"
+          >
+            → TOON
+          </button>
+          <button
+            id="json-format-btn"
+            class="px-3 py-1.5 bg-gray-200 text-gray-700 rounded-md text-sm font-medium hover:bg-gray-300 transition-colors"
+          >
+            Format
+          </button>
+          <button
+            id="json-copy-btn"
+            class="px-3 py-1.5 bg-gray-200 text-gray-700 rounded-md text-sm font-medium hover:bg-gray-300 transition-colors"
+          >
+            Copy
+          </button>
+          <button
+            id="json-clear-btn"
+            class="px-3 py-1.5 bg-red-100 text-red-700 rounded-md text-sm font-medium hover:bg-red-200 transition-colors"
+          >
+            Clear
+          </button>
+        </div>
+      </div>
+      <textarea
+        id="json-input"
+        class="w-full h-96 p-4 border border-gray-300 rounded-lg font-mono text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none bg-white"
+        placeholder='Example: {"users": [{"id": 1, "name": "Alice", "role": "admin"}]}'
+      ></textarea>
+      <div id="json-error" class="mt-2 text-sm text-red-600 hidden"></div>
+    </div>
+
+    <!-- TOON Output -->
+    <div class="flex flex-col">
+      <div class="flex items-center justify-between mb-2">
+        <label for="toon-output" class="text-sm font-semibold text-gray-700">
+          TOON
+        </label>
+        <div class="flex gap-2">
+          <button
+            id="toon-to-json-btn"
+            class="px-3 py-1.5 bg-green-600 text-white rounded-md text-sm font-medium hover:bg-green-700 transition-colors"
+          >
+            → JSON
+          </button>
+          <button
+            id="toon-copy-btn"
+            class="px-3 py-1.5 bg-gray-200 text-gray-700 rounded-md text-sm font-medium hover:bg-gray-300 transition-colors"
+          >
+            Copy
+          </button>
+          <button
+            id="toon-clear-btn"
+            class="px-3 py-1.5 bg-red-100 text-red-700 rounded-md text-sm font-medium hover:bg-red-200 transition-colors"
+          >
+            Clear
+          </button>
+        </div>
+      </div>
+      <textarea
+        id="toon-output"
+        class="w-full h-96 p-4 border border-gray-300 rounded-lg font-mono text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 resize-none bg-white"
+        placeholder="The TOON result will appear here..."
+      ></textarea>
+      <div id="toon-error" class="mt-2 text-sm text-red-600 hidden"></div>
+    </div>
+  </div>
+
+  <!-- Options -->
+  <div class="mt-6 p-4 bg-white rounded-lg border border-gray-200">
+    <h3 class="text-sm font-semibold text-gray-700 mb-3">Conversion Options</h3>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div>
+        <label class="block text-xs text-gray-600 mb-1">Delimiter</label>
+        <select
+          id="delimiter-select"
+          class="w-full p-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+        >
+          <option value=",">Comma (,)</option>
+          <option value="\t">Tab</option>
+          <option value="|">Pipe (|)</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-xs text-gray-600 mb-1">Indentation</label>
+        <input
+          type="number"
+          id="indent-input"
+          value="2"
+          min="1"
+          max="4"
+          class="w-full p-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+        />
+      </div>
+      <div class="flex items-end">
+        <label class="flex items-center cursor-pointer">
+          <input
+            type="checkbox"
+            id="length-marker-checkbox"
+            class="mr-2"
+          />
+          <span class="text-xs text-gray-600">Length Marker (#)</span>
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { jsonToToon, toonToJson } from '../lib/converter';
+
+  const jsonInput = document.getElementById('json-input') as HTMLTextAreaElement;
+  const toonOutput = document.getElementById('toon-output') as HTMLTextAreaElement;
+  const jsonError = document.getElementById('json-error');
+  const toonError = document.getElementById('toon-error');
+  const delimiterSelect = document.getElementById('delimiter-select') as HTMLSelectElement;
+  const indentInput = document.getElementById('indent-input') as HTMLInputElement;
+  const lengthMarkerCheckbox = document.getElementById('length-marker-checkbox') as HTMLInputElement;
+
+  function hideError(element: HTMLElement) {
+    element.classList.add('hidden');
+    element.textContent = '';
+  }
+
+  function showError(element: HTMLElement, message: string) {
+    element.textContent = message;
+    element.classList.remove('hidden');
+  }
+
+  function convertJsonToToon() {
+    hideError(jsonError!);
+    hideError(toonError!);
+
+    const jsonText = jsonInput.value.trim();
+    if (!jsonText) {
+      showError(jsonError!, 'Please enter a valid JSON');
+      return;
+    }
+
+    try {
+      const jsonData = JSON.parse(jsonText);
+      const delimiter = delimiterSelect.value === '\\t' ? '\t' : delimiterSelect.value;
+      const indent = parseInt(indentInput.value, 10) || 2;
+      const lengthMarker = lengthMarkerCheckbox.checked ? '#' as const : false;
+
+      const toonText = jsonToToon(jsonData, {
+        delimiter: delimiter as ',' | '\t' | '|',
+        indent,
+        lengthMarker: lengthMarker || false,
+      });
+
+      toonOutput.value = toonText;
+    } catch (error) {
+      showError(jsonError!, `Error converting: ${error instanceof Error ? error.message : 'Invalid JSON'}`);
+      toonOutput.value = '';
+    }
+  }
+
+  function convertToonToJson() {
+    hideError(jsonError!);
+    hideError(toonError!);
+
+    const toonText = toonOutput.value.trim();
+    if (!toonText) {
+      showError(toonError!, 'Please enter a valid TOON');
+      return;
+    }
+
+    try {
+      const indent = parseInt(indentInput.value, 10) || 2;
+      const jsonData = toonToJson(toonText, {
+        indent,
+        strict: true,
+      });
+
+      jsonInput.value = JSON.stringify(jsonData, null, 2);
+    } catch (error) {
+      showError(toonError!, `Error converting: ${error instanceof Error ? error.message : 'Invalid TOON'}`);
+    }
+  }
+
+  function formatJson() {
+    hideError(jsonError!);
+
+    const jsonText = jsonInput.value.trim();
+    if (!jsonText) {
+      showError(jsonError!, 'Please enter a valid JSON');
+      return;
+    }
+
+    try {
+      const jsonData = JSON.parse(jsonText);
+      jsonInput.value = JSON.stringify(jsonData, null, 2);
+    } catch (error) {
+      showError(jsonError!, `Error formatting: ${error instanceof Error ? error.message : 'Invalid JSON'}`);
+    }
+  }
+
+  function copyToClipboard(text: string, button: HTMLButtonElement) {
+    navigator.clipboard.writeText(text).then(() => {
+      // Show temporary feedback
+      const originalText = button.textContent;
+      button.textContent = '✓ Copied';
+      button.classList.add('bg-green-100', 'text-green-700');
+      setTimeout(() => {
+        button.textContent = originalText;
+        button.classList.remove('bg-green-100', 'text-green-700');
+      }, 2000);
+    }).catch(err => {
+      console.error('Error copying:', err);
+    });
+  }
+
+  // Event listeners
+  document.getElementById('json-to-toon-btn')?.addEventListener('click', convertJsonToToon);
+  document.getElementById('toon-to-json-btn')?.addEventListener('click', convertToonToJson);
+  document.getElementById('json-format-btn')?.addEventListener('click', formatJson);
+  document.getElementById('json-copy-btn')?.addEventListener('click', (e) => {
+    copyToClipboard(jsonInput.value, e.target as HTMLButtonElement);
+  });
+  document.getElementById('json-clear-btn')?.addEventListener('click', () => {
+    jsonInput.value = '';
+    hideError(jsonError!);
+  });
+  document.getElementById('toon-clear-btn')?.addEventListener('click', () => {
+    toonOutput.value = '';
+    hideError(toonError!);
+  });
+  document.getElementById('toon-copy-btn')?.addEventListener('click', (e) => {
+    copyToClipboard(toonOutput.value, e.target as HTMLButtonElement);
+  });
+  // Auto-convert on JSON input change (debounced)
+  let jsonTimeout: ReturnType<typeof setTimeout>;
+  jsonInput.addEventListener('input', () => {
+    clearTimeout(jsonTimeout);
+    jsonTimeout = setTimeout(() => {
+      if (jsonInput.value.trim()) {
+        convertJsonToToon();
+      }
+    }, 500);
+  });
+
+  // Example JSON on load
+  window.addEventListener('load', () => {
+    const exampleJson = {
+      users: [
+        { id: 1, name: 'Alice', role: 'admin', tags: ['reading', 'gaming'] },
+        { id: 2, name: 'Bob', role: 'user', tags: ['coding'] }
+      ],
+      metadata: {
+        total: 2,
+        timestamp: new Date().toISOString()
+      }
+    };
+    jsonInput.value = JSON.stringify(exampleJson, null, 2);
+    convertJsonToToon();
+  });
+</script>
+
