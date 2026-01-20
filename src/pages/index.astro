@@ -4,63 +4,92 @@ import Converter from '../components/Converter.astro';
 ---
 
 <Layout>
-  <main class="container mx-auto px-4 py-8 max-w-6xl">
-    <!-- Theme Toggle Button -->
-    <div class="fixed top-4 right-4 z-50">
+  <main class="container mx-auto px-4 py-12 md:py-20 max-w-6xl relative">
+    <!-- Theme Toggle -->
+    <div class="absolute top-6 right-6 z-50">
       <button
         id="theme-toggle"
-        class="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+        class="group relative p-3 bg-black dark:bg-white border-4 border-black dark:border-white text-white dark:text-black hover:bg-amber-400 dark:hover:bg-amber-500 hover:border-amber-400 dark:hover:border-amber-500 transition-all duration-200 shadow-[8px_8px_0_0_rgba(0,0,0,0.2)] dark:shadow-[8px_8px_0_0_rgba(255,255,255,0.2)] hover:shadow-[4px_4px_0_0_rgba(0,0,0,0.2)] dark:hover:shadow-[4px_4px_0_0_rgba(255,255,255,0.2)] hover:translate-x-1 hover:translate-y-1 active:translate-x-2 active:translate-y-2 active:shadow-none"
         aria-label="Toggle theme"
       >
-        <svg id="theme-icon-dark" class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+        <svg id="theme-icon-dark" class="w-6 h-6 hidden dark:block transition-transform" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
         </svg>
-        <svg id="theme-icon-light" class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+        <svg id="theme-icon-light" class="w-6 h-6 block dark:hidden transition-transform" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
         </svg>
       </button>
     </div>
 
-    <header class="text-center mb-12">
-      <h1 class="text-5xl font-bold text-gray-900 dark:text-gray-100 mb-4">
-        JSON ↔ TOON
+    <header class="text-center mb-20 relative">
+      <div class="inline-flex items-center gap-3 px-4 py-2 bg-black dark:bg-white border-4 border-black dark:border-white mb-8 shadow-[6px_6px_0_0_rgba(251,191,36,1)] dark:shadow-[6px_6px_0_0_rgba(251,191,36,0.8)]">
+        <span class="relative flex h-2.5 w-2.5">
+          <span class="animate-ping absolute inline-flex h-full w-full bg-amber-400 dark:bg-amber-500 opacity-75"></span>
+          <span class="relative inline-flex h-2.5 w-2.5 bg-amber-400 dark:bg-amber-500"></span>
+        </span>
+        <span class="text-white dark:text-black text-xs font-black uppercase tracking-widest">V1.0.0 Now Live</span>
+      </div>
+
+      <h1 class="text-6xl md:text-8xl lg:text-9xl font-black tracking-[-0.04em] mb-8 leading-[0.9]">
+        <span class="inline-block bg-black dark:bg-white text-white dark:text-black px-6 py-2 border-4 border-black dark:border-white shadow-[12px_12px_0_0_rgba(59,130,246,1)] dark:shadow-[12px_12px_0_0_rgba(59,130,246,0.8)] transform rotate-[-1deg] hover:rotate-0 transition-transform duration-300">JSON</span>
+        <span class="mx-4 text-black dark:text-white text-4xl md:text-6xl font-black">↔</span>
+        <span class="inline-block bg-amber-400 dark:bg-amber-500 text-black px-6 py-2 border-4 border-black dark:border-white shadow-[12px_12px_0_0_rgba(0,0,0,0.3)] dark:shadow-[12px_12px_0_0_rgba(255,255,255,0.3)] transform rotate-[1deg] hover:rotate-0 transition-transform duration-300">TOON</span>
       </h1>
-      <p class="text-xl text-gray-600 dark:text-gray-300 mb-2">
-        Converter between JSON and TOON (Token-Oriented Object Notation)
+
+      <p class="text-xl md:text-2xl max-w-3xl mx-auto mb-10 font-bold leading-relaxed">
+        <span class="text-black dark:text-white">The efficient object notation for LLMs.</span>
+        <br />
+        <span class="text-amber-600 dark:text-amber-400">Reduce token usage by up to 60%.</span>
       </p>
-      <p class="text-sm text-gray-500 dark:text-gray-400 max-w-2xl mx-auto">
-        TOON is a compact and efficient format designed to pass structured data to 
-        Large Language Models with significantly reduced token usage (30-60% less than JSON).
-      </p>
-      <p class="text-xs text-gray-400 dark:text-gray-500 max-w-2xl mx-auto mt-2">
-        🔒 All processing happens locally in your browser - your data never leaves your device
-      </p>
+
+      <div class="flex flex-wrap justify-center gap-4 text-sm">
+        <div class="flex items-center gap-3 px-5 py-3 bg-white dark:bg-black border-4 border-black dark:border-white shadow-[4px_4px_0_0_rgba(0,0,0,0.2)] dark:shadow-[4px_4px_0_0_rgba(255,255,255,0.2)]">
+          <svg class="w-5 h-5 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+          </svg>
+          <span class="font-black text-black dark:text-white uppercase tracking-wider">100% Client-side</span>
+        </div>
+        <div class="flex items-center gap-3 px-5 py-3 bg-white dark:bg-black border-4 border-black dark:border-white shadow-[4px_4px_0_0_rgba(0,0,0,0.2)] dark:shadow-[4px_4px_0_0_rgba(255,255,255,0.2)]">
+          <svg class="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+          </svg>
+          <span class="font-black text-black dark:text-white uppercase tracking-wider">Optimized for GPT-5.2 & Gemini 3</span>
+        </div>
+      </div>
     </header>
 
     <Converter />
 
-    <footer class="mt-16 text-center text-sm text-gray-500 dark:text-gray-400">
-      <p>
-        Powered by <a href="https://github.com/johannschopplich/toon" target="_blank" rel="noopener noreferrer" class="text-blue-600 dark:text-blue-400 hover:underline">@byjohann/toon</a>
-      </p>
-      <p class="mt-2">
-        Made with <a href="https://astro.build" target="_blank" rel="noopener noreferrer" class="text-blue-600 dark:text-blue-400 hover:underline">Astro</a> and 
-        <a href="https://tailwindcss.com" target="_blank" rel="noopener noreferrer" class="text-blue-600 dark:text-blue-400 hover:underline">Tailwind CSS</a>
-      </p>
+    <footer class="mt-32 pt-12 border-t-4 border-black dark:border-white text-center">
+      <div class="flex flex-col md:flex-row justify-between items-center gap-8">
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 bg-black dark:bg-white border-4 border-black dark:border-white flex items-center justify-center text-white dark:text-black font-black text-lg shadow-[4px_4px_0_0_rgba(251,191,36,1)] dark:shadow-[4px_4px_0_0_rgba(251,191,36,0.8)]">JT</div>
+          <span class="font-black text-black dark:text-white text-lg uppercase tracking-wider">JSON ↔ TOON</span>
+        </div>
+
+        <div class="flex items-center gap-6">
+          <a href="https://github.com/johannschopplich/toon" target="_blank" rel="noopener noreferrer" class="px-4 py-2 bg-white dark:bg-black border-2 border-black dark:border-white text-black dark:text-white font-bold uppercase text-xs tracking-wider hover:bg-amber-400 dark:hover:bg-amber-500 hover:border-amber-400 dark:hover:border-amber-500 transition-all shadow-[3px_3px_0_0_rgba(0,0,0,0.2)] dark:shadow-[3px_3px_0_0_rgba(255,255,255,0.2)] hover:shadow-[1px_1px_0_0_rgba(0,0,0,0.2)] dark:hover:shadow-[1px_1px_0_0_rgba(255,255,255,0.2)] hover:translate-x-0.5 hover:translate-y-0.5 flex items-center gap-2">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.43.372.823 1.102.823 2.222 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+            Engine
+          </a>
+          <a href="https://astro.build" target="_blank" rel="noopener noreferrer" class="px-4 py-2 bg-white dark:bg-black border-2 border-black dark:border-white text-black dark:text-white font-bold uppercase text-xs tracking-wider hover:bg-blue-500 dark:hover:bg-blue-400 hover:border-blue-500 dark:hover:border-blue-400 transition-all shadow-[3px_3px_0_0_rgba(0,0,0,0.2)] dark:shadow-[3px_3px_0_0_rgba(255,255,255,0.2)] hover:shadow-[1px_1px_0_0_rgba(0,0,0,0.2)] dark:hover:shadow-[1px_1px_0_0_rgba(255,255,255,0.2)] hover:translate-x-0.5 hover:translate-y-0.5">
+            Build with Astro
+          </a>
+          <a href="https://tailwindcss.com" target="_blank" rel="noopener noreferrer" class="px-4 py-2 bg-white dark:bg-black border-2 border-black dark:border-white text-black dark:text-white font-bold uppercase text-xs tracking-wider hover:bg-cyan-500 dark:hover:bg-cyan-400 hover:border-cyan-500 dark:hover:border-cyan-400 transition-all shadow-[3px_3px_0_0_rgba(0,0,0,0.2)] dark:shadow-[3px_3px_0_0_rgba(255,255,255,0.2)] hover:shadow-[1px_1px_0_0_rgba(0,0,0,0.2)] dark:hover:shadow-[1px_1px_0_0_rgba(255,255,255,0.2)] hover:translate-x-0.5 hover:translate-y-0.5">
+            Tailwind CSS
+          </a>
+        </div>
+
+        <p class="text-xs font-bold text-black dark:text-white uppercase tracking-widest">© 2026 JSON-TOON</p>
+      </div>
     </footer>
   </main>
 </Layout>
 
 <script>
-  // Theme toggle functionality
   const themeToggle = document.getElementById('theme-toggle');
   const html = document.documentElement;
-  
-  function updateThemeIcon() {
-    const isDark = html.classList.contains('dark');
-    // Icons are already handled by Tailwind's dark: classes
-  }
-  
+
   themeToggle?.addEventListener('click', () => {
     const isDark = html.classList.contains('dark');
     if (isDark) {
@@ -70,10 +99,5 @@ import Converter from '../components/Converter.astro';
       html.classList.add('dark');
       localStorage.setItem('theme', 'dark');
     }
-    updateThemeIcon();
   });
-  
-  // Update icon on page load
-  updateThemeIcon();
 </script>
-

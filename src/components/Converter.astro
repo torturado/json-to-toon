@@ -1,132 +1,192 @@
----
-// Component imports
----
-
-<div class="converter-wrapper" id="converter">
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <!-- JSON Input -->
-    <div class="flex flex-col">
-      <div class="flex items-center justify-between mb-2">
-        <label for="json-input" class="text-sm font-semibold text-gray-700 dark:text-gray-300">
-          JSON
-        </label>
-        <div class="flex gap-2">
-          <button
-            id="json-to-toon-btn"
-            class="px-3 py-1.5 bg-blue-600 dark:bg-blue-700 text-white rounded-md text-sm font-medium hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors"
-          >
-            → TOON
-          </button>
-          <button
-            id="json-format-btn"
-            class="px-3 py-1.5 bg-gray-300 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-md text-sm font-medium hover:bg-gray-400 dark:hover:bg-gray-600 transition-colors"
-          >
-            Format
-          </button>
-          <button
-            id="json-copy-btn"
-            class="px-3 py-1.5 bg-gray-300 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-md text-sm font-medium hover:bg-gray-400 dark:hover:bg-gray-600 transition-colors"
-          >
-            Copy
-          </button>
-          <button
-            id="json-clear-btn"
-            class="px-3 py-1.5 bg-red-200 dark:bg-red-900/50 text-red-700 dark:text-red-400 rounded-md text-sm font-medium hover:bg-red-300 dark:hover:bg-red-900 transition-colors"
-          >
-            Clear
-          </button>
-        </div>
-      </div>
-      <textarea
-        id="json-input"
-        class="w-full h-96 p-4 border border-gray-300 dark:border-gray-600 rounded-lg font-mono text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500"
-        placeholder='Example: {"users": [{"id": 1, "name": "Alice", "role": "admin"}]}'
-      ></textarea>
-      <div id="json-error" class="mt-2 text-sm text-red-600 dark:text-red-400 hidden"></div>
-    </div>
-
-    <!-- TOON Output -->
-    <div class="flex flex-col">
-      <div class="flex items-center justify-between mb-2">
-        <div class="flex items-center gap-3">
-          <label for="toon-output" class="text-sm font-semibold text-gray-700 dark:text-gray-300">
-            TOON
-          </label>
-          <div id="token-comparison-mini" class="hidden text-xs">
-            <div class="flex items-center gap-2 px-2 py-1 bg-gray-50 dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-700">
-              <span class="text-gray-500 dark:text-gray-400">Tokens:</span>
-              <span id="json-tokens-mini" class="text-blue-600 dark:text-blue-400 font-semibold">0</span>
-              <span class="text-gray-400 dark:text-gray-500">→</span>
-              <span id="toon-tokens-mini" class="text-green-600 dark:text-green-400 font-semibold">0</span>
-              <span class="text-emerald-600 dark:text-emerald-400 font-semibold ml-1" id="savings-mini">(-0%)</span>
-            </div>
+<div class="converter-wrapper space-y-10" id="converter">
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10">
+    <!-- JSON Input Card -->
+    <div class="brutal-card bg-white dark:bg-black border-4 border-black dark:border-white p-8 flex flex-col group shadow-[12px_12px_0_0_rgba(59,130,246,0.3)] dark:shadow-[12px_12px_0_0_rgba(59,130,246,0.2)] hover:shadow-[8px_8px_0_0_rgba(59,130,246,0.4)] dark:hover:shadow-[8px_8px_0_0_rgba(59,130,246,0.3)] transition-all duration-200">
+      <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center gap-4">
+          <div class="w-14 h-14 bg-blue-500 border-4 border-black dark:border-white flex items-center justify-center text-white shadow-[4px_4px_0_0_rgba(0,0,0,0.2)] dark:shadow-[4px_4px_0_0_rgba(255,255,255,0.2)]">
+            <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+            </svg>
+          </div>
+          <div>
+            <h2 class="text-base font-black text-black dark:text-white uppercase tracking-widest">JSON</h2>
+            <p class="text-[10px] text-black/60 dark:text-white/60 font-black uppercase tracking-widest">INPUT DATA</p>
           </div>
         </div>
         <div class="flex gap-2">
           <button
-            id="toon-to-json-btn"
-            class="px-3 py-1.5 bg-green-600 dark:bg-green-700 text-white rounded-md text-sm font-medium hover:bg-green-700 dark:hover:bg-green-600 transition-colors"
+            id="json-format-btn"
+            title="Format JSON"
+            class="p-2.5 bg-white dark:bg-black border-2 border-black dark:border-white text-black dark:text-white hover:bg-blue-500 hover:border-blue-500 hover:text-white transition-all shadow-[2px_2px_0_0_rgba(0,0,0,0.2)] dark:shadow-[2px_2px_0_0_rgba(255,255,255,0.2)] hover:shadow-[1px_1px_0_0_rgba(0,0,0,0.2)] dark:hover:shadow-[1px_1px_0_0_rgba(255,255,255,0.2)] hover:translate-x-0.5 hover:translate-y-0.5 active:translate-x-1 active:translate-y-1 active:shadow-none"
           >
-            → JSON
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16m-7 6h7" />
+            </svg>
           </button>
           <button
-            id="toon-copy-btn"
-            class="px-3 py-1.5 bg-gray-300 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-md text-sm font-medium hover:bg-gray-400 dark:hover:bg-gray-600 transition-colors"
+            id="json-copy-btn"
+            title="Copy to Clipboard"
+            class="p-2.5 bg-white dark:bg-black border-2 border-black dark:border-white text-black dark:text-white hover:bg-emerald-500 hover:border-emerald-500 hover:text-white transition-all shadow-[2px_2px_0_0_rgba(0,0,0,0.2)] dark:shadow-[2px_2px_0_0_rgba(255,255,255,0.2)] hover:shadow-[1px_1px_0_0_rgba(0,0,0,0.2)] dark:hover:shadow-[1px_1px_0_0_rgba(255,255,255,0.2)] hover:translate-x-0.5 hover:translate-y-0.5 active:translate-x-1 active:translate-y-1 active:shadow-none"
           >
-            Copy
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+            </svg>
           </button>
           <button
-            id="toon-clear-btn"
-            class="px-3 py-1.5 bg-red-200 dark:bg-red-900/50 text-red-700 dark:text-red-400 rounded-md text-sm font-medium hover:bg-red-300 dark:hover:bg-red-900 transition-colors"
+            id="json-clear-btn"
+            title="Clear"
+            class="p-2.5 bg-white dark:bg-black border-2 border-red-600 dark:border-red-500 text-red-600 dark:text-red-400 hover:bg-red-600 dark:hover:bg-red-500 hover:text-white transition-all shadow-[2px_2px_0_0_rgba(220,38,38,0.3)] dark:shadow-[2px_2px_0_0_rgba(239,68,68,0.3)] hover:shadow-[1px_1px_0_0_rgba(220,38,38,0.3)] dark:hover:shadow-[1px_1px_0_0_rgba(239,68,68,0.3)] hover:translate-x-0.5 hover:translate-y-0.5 active:translate-x-1 active:translate-y-1 active:shadow-none"
           >
-            Clear
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+            </svg>
           </button>
         </div>
       </div>
-      <textarea
-        id="toon-output"
-        class="w-full h-96 p-4 border border-gray-300 dark:border-gray-600 rounded-lg font-mono text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 resize-none bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500"
-        placeholder="The TOON result will appear here..."
-      ></textarea>
-      <div id="toon-error" class="mt-2 text-sm text-red-600 dark:text-red-400 hidden"></div>
+
+      <div class="relative flex-1 mb-6">
+        <textarea
+          id="json-input"
+          class="w-full h-[450px] p-6 bg-neutral-50 dark:bg-neutral-950 border-4 border-black dark:border-white font-mono text-sm text-black dark:text-white resize-none focus:outline-none focus:ring-0 focus:border-blue-500 dark:focus:border-blue-500 transition-colors shadow-[inset_4px_4px_0_0_rgba(0,0,0,0.1)] dark:shadow-[inset_4px_4px_0_0_rgba(255,255,255,0.1)] placeholder:text-black/40 dark:placeholder:text-white/40"
+          placeholder='Paste your JSON here...'
+        ></textarea>
+        <div id="json-error" class="absolute bottom-6 left-6 right-6 p-4 bg-red-500 border-4 border-black dark:border-white text-white text-xs font-bold uppercase tracking-wider hidden shadow-[4px_4px_0_0_rgba(0,0,0,0.2)] dark:shadow-[4px_4px_0_0_rgba(255,255,255,0.2)]"></div>
+      </div>
+
+      <button
+        id="json-to-toon-btn"
+        class="w-full py-5 bg-blue-500 border-4 border-black dark:border-white text-white font-black uppercase tracking-widest flex items-center justify-center gap-3 hover:bg-blue-600 transition-colors shadow-[6px_6px_0_0_rgba(0,0,0,0.3)] dark:shadow-[6px_6px_0_0_rgba(255,255,255,0.3)] hover:shadow-[4px_4px_0_0_rgba(0,0,0,0.3)] dark:hover:shadow-[4px_4px_0_0_rgba(255,255,255,0.3)] hover:translate-x-1 hover:translate-y-1 active:translate-x-2 active:translate-y-2 active:shadow-none group/btn"
+      >
+        <span>Convert to TOON</span>
+        <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- TOON Output Card -->
+    <div class="brutal-card bg-white dark:bg-black border-4 border-black dark:border-white p-8 flex flex-col group shadow-[12px_12px_0_0_rgba(251,191,36,0.3)] dark:shadow-[12px_12px_0_0_rgba(251,191,36,0.2)] hover:shadow-[8px_8px_0_0_rgba(251,191,36,0.4)] dark:hover:shadow-[8px_8px_0_0_rgba(251,191,36,0.3)] transition-all duration-200">
+      <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center gap-4">
+          <div class="w-14 h-14 bg-amber-400 dark:bg-amber-500 border-4 border-black dark:border-white flex items-center justify-center text-black shadow-[4px_4px_0_0_rgba(0,0,0,0.2)] dark:shadow-[4px_4px_0_0_rgba(255,255,255,0.2)]">
+            <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+          </div>
+          <div>
+            <h2 class="text-base font-black text-black dark:text-white uppercase tracking-widest">TOON</h2>
+            <p class="text-[10px] text-black/60 dark:text-white/60 font-black uppercase tracking-widest">LLM-READY FORMAT</p>
+          </div>
+        </div>
+        <div class="flex gap-2">
+          <button
+            id="toon-copy-btn"
+            title="Copy TOON"
+            class="p-2.5 bg-white dark:bg-black border-2 border-black dark:border-white text-black dark:text-white hover:bg-emerald-500 hover:border-emerald-500 hover:text-white transition-all shadow-[2px_2px_0_0_rgba(0,0,0,0.2)] dark:shadow-[2px_2px_0_0_rgba(255,255,255,0.2)] hover:shadow-[1px_1px_0_0_rgba(0,0,0,0.2)] dark:hover:shadow-[1px_1px_0_0_rgba(255,255,255,0.2)] hover:translate-x-0.5 hover:translate-y-0.5 active:translate-x-1 active:translate-y-1 active:shadow-none"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+            </svg>
+          </button>
+          <button
+            id="toon-clear-btn"
+            title="Clear"
+            class="p-2.5 bg-white dark:bg-black border-2 border-red-600 dark:border-red-500 text-red-600 dark:text-red-400 hover:bg-red-600 dark:hover:bg-red-500 hover:text-white transition-all shadow-[2px_2px_0_0_rgba(220,38,38,0.3)] dark:shadow-[2px_2px_0_0_rgba(239,68,68,0.3)] hover:shadow-[1px_1px_0_0_rgba(220,38,38,0.3)] dark:hover:shadow-[1px_1px_0_0_rgba(239,68,68,0.3)] hover:translate-x-0.5 hover:translate-y-0.5 active:translate-x-1 active:translate-y-1 active:shadow-none"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="relative flex-1 mb-6">
+        <textarea
+          id="toon-output"
+          class="w-full h-[450px] p-6 bg-neutral-50 dark:bg-neutral-950 border-4 border-black dark:border-white font-mono text-sm text-black dark:text-white resize-none focus:outline-none focus:ring-0 focus:border-amber-400 dark:focus:border-amber-500 transition-colors shadow-[inset_4px_4px_0_0_rgba(0,0,0,0.1)] dark:shadow-[inset_4px_4px_0_0_rgba(255,255,255,0.1)] placeholder:text-black/40 dark:placeholder:text-white/40"
+          placeholder="Result will appear here..."
+        ></textarea>
+        <div id="toon-error" class="absolute bottom-6 left-6 right-6 p-4 bg-red-500 border-4 border-black dark:border-white text-white text-xs font-bold uppercase tracking-wider hidden shadow-[4px_4px_0_0_rgba(0,0,0,0.2)] dark:shadow-[4px_4px_0_0_rgba(255,255,255,0.2)]"></div>
+      </div>
+
+      <button
+        id="toon-to-json-btn"
+        class="w-full py-5 bg-amber-400 dark:bg-amber-500 border-4 border-black dark:border-white text-black dark:text-white font-black uppercase tracking-widest flex items-center justify-center gap-3 hover:bg-amber-500 dark:hover:bg-amber-600 transition-colors shadow-[6px_6px_0_0_rgba(0,0,0,0.3)] dark:shadow-[6px_6px_0_0_rgba(255,255,255,0.3)] hover:shadow-[4px_4px_0_0_rgba(0,0,0,0.3)] dark:hover:shadow-[4px_4px_0_0_rgba(255,255,255,0.3)] hover:translate-x-1 hover:translate-y-1 active:translate-x-2 active:translate-y-2 active:shadow-none group/btn"
+      >
+        <svg class="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        </svg>
+        <span>Back to JSON</span>
+      </button>
     </div>
   </div>
 
-  <!-- Options -->
-  <div class="mt-6 p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
-    <h3 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">Conversion Options</h3>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-      <div>
-        <label class="block text-xs text-gray-600 dark:text-gray-400 mb-1">Delimiter</label>
-        <select
-          id="delimiter-select"
-          class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-        >
-          <option value=",">Comma (,)</option>
-          <option value="\t">Tab</option>
-          <option value="|">Pipe (|)</option>
-        </select>
+  <!-- Bento Bottom Row -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <!-- Token Stats Card -->
+    <div id="token-comparison-mini" class="brutal-card bg-white dark:bg-black border-4 border-black dark:border-white p-8 flex flex-col justify-center opacity-40 grayscale transition-all duration-300">
+      <div class="flex items-center gap-4 mb-6">
+        <div class="p-3 bg-emerald-500 border-2 border-black dark:border-white text-white shadow-[3px_3px_0_0_rgba(0,0,0,0.2)] dark:shadow-[3px_3px_0_0_rgba(255,255,255,0.2)]">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+          </svg>
+        </div>
+        <h3 class="text-sm font-black text-black dark:text-white uppercase tracking-widest">Efficiency</h3>
       </div>
-      <div>
-        <label class="block text-xs text-gray-600 dark:text-gray-400 mb-1">Indentation</label>
-        <input
-          type="number"
-          id="indent-input"
-          value="2"
-          min="1"
-          max="4"
-          class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-        />
+      <div class="flex items-baseline gap-3 mb-6">
+        <span id="savings-mini" class="text-5xl font-black text-emerald-500">0%</span>
+        <span class="text-xs text-black/60 dark:text-white/60 font-black uppercase tracking-widest">Reduction</span>
       </div>
-      <div class="flex items-end">
-        <label class="flex items-center cursor-pointer">
+      <div class="flex items-center justify-between text-xs font-black border-t-4 border-black dark:border-white pt-6">
+        <div class="text-black/60 dark:text-white/60 uppercase tracking-wider">JSON: <span id="json-tokens-mini" class="text-black dark:text-white">0</span></div>
+        <div class="w-8 h-1 bg-black dark:bg-white"></div>
+        <div class="text-black/60 dark:text-white/60 uppercase tracking-wider">TOON: <span id="toon-tokens-mini" class="text-black dark:text-white">0</span></div>
+      </div>
+    </div>
+
+    <!-- Options Card -->
+    <div class="md:col-span-2 brutal-card bg-white dark:bg-black border-4 border-black dark:border-white p-8">
+      <div class="flex items-center gap-4 mb-8">
+        <div class="p-3 bg-blue-500 border-2 border-black dark:border-white text-white shadow-[3px_3px_0_0_rgba(0,0,0,0.2)] dark:shadow-[3px_3px_0_0_rgba(255,255,255,0.2)]">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+          </svg>
+        </div>
+        <h3 class="text-sm font-black text-black dark:text-white uppercase tracking-widest">Conversion Settings</h3>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+        <div class="space-y-3">
+          <label class="text-[10px] font-black text-black/60 dark:text-white/60 uppercase tracking-widest block">Delimiter</label>
+          <select
+            id="delimiter-select"
+            class="w-full p-4 bg-neutral-50 dark:bg-neutral-950 border-4 border-black dark:border-white text-sm font-bold text-black dark:text-white focus:outline-none focus:ring-0 focus:border-blue-500 dark:focus:border-blue-500 transition-colors shadow-[inset_3px_3px_0_0_rgba(0,0,0,0.1)] dark:shadow-[inset_3px_3px_0_0_rgba(255,255,255,0.1)]"
+          >
+            <option value=",">Comma (,)</option>
+            <option value="\t">Tab</option>
+            <option value="|">Pipe (|)</option>
+          </select>
+        </div>
+        <div class="space-y-3">
+          <label class="text-[10px] font-black text-black/60 dark:text-white/60 uppercase tracking-widest block">Indentation</label>
           <input
-            type="checkbox"
-            id="length-marker-checkbox"
-            class="mr-2 accent-blue-600"
+            type="number"
+            id="indent-input"
+            value="2"
+            min="1"
+            max="4"
+            class="w-full p-4 bg-neutral-50 dark:bg-neutral-950 border-4 border-black dark:border-white text-sm font-bold text-black dark:text-white focus:outline-none focus:ring-0 focus:border-blue-500 dark:focus:border-blue-500 transition-colors shadow-[inset_3px_3px_0_0_rgba(0,0,0,0.1)] dark:shadow-[inset_3px_3px_0_0_rgba(255,255,255,0.1)]"
           />
-          <span class="text-xs text-gray-600 dark:text-gray-400">Length Marker (#)</span>
-        </label>
+        </div>
+        <div class="flex items-center justify-center pt-8 sm:pt-6">
+          <label class="relative flex items-center gap-4 cursor-pointer group">
+            <div class="relative">
+              <input type="checkbox" id="length-marker-checkbox" class="sr-only peer" />
+              <div class="w-14 h-7 bg-neutral-200 dark:bg-neutral-800 border-4 border-black dark:border-white peer peer-focus:ring-0 peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-0 after:left-0 after:bg-amber-400 dark:after:bg-amber-500 after:border-4 after:border-black dark:after:border-white after:h-full after:w-7 after:transition-all peer-checked:bg-amber-400 dark:peer-checked:bg-amber-500 shadow-[inset_2px_2px_0_0_rgba(0,0,0,0.1)] dark:shadow-[inset_2px_2px_0_0_rgba(255,255,255,0.1)]"></div>
+            </div>
+            <span class="text-xs font-black text-black dark:text-white uppercase tracking-widest group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">Length Marker (#)</span>
+          </label>
+        </div>
       </div>
     </div>
   </div>
@@ -154,7 +214,7 @@
   }
 
   function showError(element: HTMLElement, message: string) {
-    element.textContent = message;
+    element.textContent = message.toUpperCase();
     element.classList.remove('hidden');
   }
 
@@ -181,11 +241,9 @@
       });
 
       toonOutput.value = toonText;
-      
-      // Update token comparison
       updateTokenComparison(jsonText, toonText);
     } catch (error) {
-      showError(jsonError!, `Error converting: ${error instanceof Error ? error.message : 'Invalid JSON'}`);
+      showError(jsonError!, `Error: ${error instanceof Error ? error.message : 'Invalid JSON'}`);
       toonOutput.value = '';
       hideTokenComparison();
     }
@@ -210,29 +268,23 @@
 
       const formattedJson = JSON.stringify(jsonData, null, 2);
       jsonInput.value = formattedJson;
-      
-      // Update token comparison
       updateTokenComparison(formattedJson, toonText);
     } catch (error) {
-      showError(toonError!, `Error converting: ${error instanceof Error ? error.message : 'Invalid TOON'}`);
+      showError(toonError!, `Error: ${error instanceof Error ? error.message : 'Invalid TOON'}`);
       hideTokenComparison();
     }
   }
 
   function formatJson() {
     hideError(jsonError!);
-
     const jsonText = jsonInput.value.trim();
-    if (!jsonText) {
-      showError(jsonError!, 'Please enter a valid JSON');
-      return;
-    }
+    if (!jsonText) return;
 
     try {
       const jsonData = JSON.parse(jsonText);
       jsonInput.value = JSON.stringify(jsonData, null, 2);
     } catch (error) {
-      showError(jsonError!, `Error formatting: ${error instanceof Error ? error.message : 'Invalid JSON'}`);
+      showError(jsonError!, 'Invalid JSON to format');
     }
   }
 
@@ -244,51 +296,42 @@
 
     try {
       const comparison = compareTokens(jsonText, toonText);
-      
+
       if (tokenComparisonMini && jsonTokensMini && toonTokensMini && savingsMini) {
-        tokenComparisonMini.classList.remove('hidden');
-        
+        tokenComparisonMini.classList.remove('opacity-40', 'grayscale');
+
         jsonTokensMini.textContent = comparison.json.toLocaleString();
         toonTokensMini.textContent = comparison.toon.toLocaleString();
-        
-        const savingsText = comparison.savingsPercent > 0 
-          ? `(-${comparison.savingsPercent.toFixed(1)}%)`
-          : `(+${Math.abs(comparison.savingsPercent).toFixed(1)}%)`;
-        savingsMini.textContent = savingsText;
-        
-        // Update color based on savings
-        if (comparison.savingsPercent > 0) {
-          savingsMini.classList.remove('text-red-600');
-          savingsMini.classList.add('text-emerald-600');
+
+        const isPositive = comparison.savingsPercent > 0;
+        savingsMini.textContent = `${isPositive ? '' : '+'}${Math.round(comparison.savingsPercent)}%`;
+
+        if (isPositive) {
+          savingsMini.className = 'text-5xl font-black text-emerald-500';
         } else {
-          savingsMini.classList.remove('text-emerald-600');
-          savingsMini.classList.add('text-red-600');
+          savingsMini.className = 'text-5xl font-black text-red-500';
         }
       }
     } catch (error) {
-      console.error('Error updating token comparison:', error);
       hideTokenComparison();
     }
   }
 
   function hideTokenComparison() {
     if (tokenComparisonMini) {
-      tokenComparisonMini.classList.add('hidden');
+      tokenComparisonMini.classList.add('opacity-40', 'grayscale');
     }
   }
 
   function copyToClipboard(text: string, button: HTMLButtonElement) {
+    const originalContent = button.innerHTML;
     navigator.clipboard.writeText(text).then(() => {
-      // Show temporary feedback
-      const originalText = button.textContent;
-      button.textContent = '✓ Copied';
-      button.classList.add('bg-green-100', 'text-green-700');
+      button.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>';
+      button.classList.add('bg-emerald-500', 'border-emerald-500', 'text-white');
       setTimeout(() => {
-        button.textContent = originalText;
-        button.classList.remove('bg-green-100', 'text-green-700');
+        button.innerHTML = originalContent;
+        button.classList.remove('bg-emerald-500', 'border-emerald-500', 'text-white');
       }, 2000);
-    }).catch(err => {
-      console.error('Error copying:', err);
     });
   }
 
@@ -297,27 +340,27 @@
   document.getElementById('toon-to-json-btn')?.addEventListener('click', convertToonToJson);
   document.getElementById('json-format-btn')?.addEventListener('click', formatJson);
   document.getElementById('json-copy-btn')?.addEventListener('click', (e) => {
-    copyToClipboard(jsonInput.value, e.target as HTMLButtonElement);
+    copyToClipboard(jsonInput.value, e.currentTarget as HTMLButtonElement);
   });
   document.getElementById('json-clear-btn')?.addEventListener('click', () => {
     jsonInput.value = '';
     hideError(jsonError!);
+    hideTokenComparison();
   });
   document.getElementById('toon-clear-btn')?.addEventListener('click', () => {
     toonOutput.value = '';
     hideError(toonError!);
+    hideTokenComparison();
   });
   document.getElementById('toon-copy-btn')?.addEventListener('click', (e) => {
-    copyToClipboard(toonOutput.value, e.target as HTMLButtonElement);
+    copyToClipboard(toonOutput.value, e.currentTarget as HTMLButtonElement);
   });
-  // Auto-convert on JSON input change (debounced)
+
   let jsonTimeout: ReturnType<typeof setTimeout>;
   jsonInput.addEventListener('input', () => {
     clearTimeout(jsonTimeout);
     jsonTimeout = setTimeout(() => {
-      if (jsonInput.value.trim()) {
-        convertJsonToToon();
-      }
+      if (jsonInput.value.trim()) convertJsonToToon();
     }, 500);
   });
 
@@ -337,4 +380,3 @@
     convertJsonToToon();
   });
 </script>
-
